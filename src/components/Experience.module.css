@@ -1,0 +1,71 @@
+.experience {
+    background: var(--background);
+    padding: var(--spacing-xl) 0;
+}
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: var(--spacing-lg) auto 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 24px;
+    height: 100%;
+    width: 1px;
+    background: var(--border);
+}
+
+.item {
+    position: relative;
+    margin-bottom: var(--spacing-lg);
+    padding-left: 60px;
+}
+
+.dot {
+    position: absolute;
+    top: 0;
+    left: 19px;
+    width: 11px;
+    height: 11px;
+    background: var(--background);
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.content {
+    transition: var(--transition-normal);
+}
+
+.role {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.company {
+    font-size: 1rem;
+    color: #a1a1aa;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.date {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: var(--spacing-sm);
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #d4d4d8;
+}
