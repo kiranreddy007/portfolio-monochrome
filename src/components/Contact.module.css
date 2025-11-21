@@ -24,15 +24,26 @@
     line-height: 1.6;
 }
 
+.actions {
+    margin-top: var(--spacing-lg);
+}
+
 .email {
-    font-size: 1.5rem;
-    color: var(--primary);
+    display: inline-block;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--background);
+    background: var(--primary);
+    padding: 1rem 2rem;
+    border-radius: 50px;
     text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 4px;
-    transition: var(--transition-fast);
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 14px 0 rgba(255, 255, 255, 0.2);
 }
 
 .email:hover {
-    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    background: #ffffff;
+    color: #000000;
 }

@@ -65,7 +65,22 @@
 }
 
 .description {
-    font-size: 1rem;
+    color: var(--text-secondary);
     line-height: 1.6;
-    color: #d4d4d8;
+    margin-bottom: var(--spacing-sm);
+}
+
+.impact {
+    font-size: 0.9rem;
+    color: var(--foreground);
+    font-style: italic;
+    border-left: 2px solid var(--primary);
+    padding-left: var(--spacing-sm);
+}
+
+.impactLabel {
+    font-weight: 600;
+    font-style: normal;
+    color: var(--primary);
+    margin-right: 0.25rem;
 }
