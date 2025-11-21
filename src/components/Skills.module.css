@@ -23,9 +23,10 @@
 .card {
     padding: var(--spacing-md);
     transition: var(--transition-normal);
-    background: rgba(0, 0, 0, 0.6);
-    /* Semi-transparent background for readability */
-    backdrop-filter: blur(5px);
+    /* Background handled by art-frame utility or var(--surface) */
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
 }
 
 .card:hover {
