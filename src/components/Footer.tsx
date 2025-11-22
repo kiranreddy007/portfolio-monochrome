@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import styles from './Footer.module.css';
+import MagneticButton from './MagneticButton';
 
 export default function Footer() {
     const containerRef = useRef<HTMLElement>(null);
@@ -46,18 +47,26 @@ export default function Footer() {
                 <div className={styles.column}>
                     <h4 className={styles.heading}>Connect</h4>
                     <div className={styles.socials}>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                            <Github size={20} />
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                            <Linkedin size={20} />
-                        </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                            <Twitter size={20} />
-                        </a>
-                        <a href="mailto:hello@example.com" className={styles.socialLink}>
-                            <Mail size={20} />
-                        </a>
+                        <MagneticButton>
+                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                                <Github size={20} />
+                            </a>
+                        </MagneticButton>
+                        <MagneticButton>
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                                <Linkedin size={20} />
+                            </a>
+                        </MagneticButton>
+                        <MagneticButton>
+                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                                <Twitter size={20} />
+                            </a>
+                        </MagneticButton>
+                        <MagneticButton>
+                            <a href="mailto:hello@example.com" className={styles.socialLink}>
+                                <Mail size={20} />
+                            </a>
+                        </MagneticButton>
                     </div>
                 </div>
             </div>

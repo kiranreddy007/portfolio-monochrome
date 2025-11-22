@@ -7,6 +7,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './Hero.module.css';
 import Signature from './Signature';
+import MagneticButton from './MagneticButton';
 
 export default function Hero() {
     const containerRef = useRef<HTMLElement>(null);
@@ -83,12 +84,16 @@ export default function Hero() {
                 </div>
 
                 <div className={styles.actions}>
-                    <Link href="#projects" className="btn btn-primary hero-btn">
-                        See My Work
-                    </Link>
-                    <Link href="#contact" className="btn btn-outline hero-btn">
-                        Let&apos;s Talk
-                    </Link>
+                    <MagneticButton>
+                        <Link href="#projects" className="btn btn-primary hero-btn">
+                            See My Work
+                        </Link>
+                    </MagneticButton>
+                    <MagneticButton>
+                        <Link href="#contact" className="btn btn-outline hero-btn">
+                            Let&apos;s Talk
+                        </Link>
+                    </MagneticButton>
                 </div>
             </div>
         </section>
