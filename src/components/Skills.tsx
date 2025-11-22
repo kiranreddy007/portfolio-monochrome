@@ -1,5 +1,8 @@
-import React from 'react';
+'use client';
 
+import React, { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import styles from './Skills.module.css';
 import { Code2, Cloud, Users, Zap, Layers, LucideProps } from 'lucide-react';
 
@@ -32,24 +35,54 @@ const offerings = [
 ];
 
 export default function Skills() {
+    const containerRef = useRef<HTMLElement>(null);
+    const gridRef = useRef<HTMLDivElement>(null);
+
+    useGSAP(() => {
+        gsap.from('.skill-title', {
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: 'top 80%',
+            },
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out',
+        });
+
+        gsap.from('.skill-card-wrapper', {
+            scrollTrigger: {
+                trigger: gridRef.current,
+                start: 'top 80%',
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+        });
+    }, { scope: containerRef });
+
     return (
-        <section id="skills" className={`${styles.skills} section-light`}>
+        <section id="skills" ref={containerRef} className={`${styles.skills} section-light`}>
             {/* Clean background, no patterns */}
             <div className={`container ${styles.content}`}>
-                <h2 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '4rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--primary)' }} className="animate-on-scroll">
+                <h2 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '4rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--primary)' }} className="skill-title">
                     What I Bring to the Table
                 </h2>
-                <div className={styles.grid}>
+                <div ref={gridRef} className={`${styles.grid} skill-grid`}>
                     {offerings.map((item, index) => (
-                        <div key={index} className={`${styles.card} art-frame animate-on-scroll delay-${(index % 3) * 100 + 100}`}>
-                            <div className={styles.iconWrapper}>
-                                {/* Thinner stroke width for classier look */}
-                                {React.cloneElement(item.icon as React.ReactElement<LucideProps>, { strokeWidth: 1.5 })}
+                        <div key={index} className="skill-card-wrapper">
+                            <div className={`${styles.card} art-frame`}>
+                                <div className={styles.iconWrapper}>
+                                    {/* Thinner stroke width for classier look */}
+                                    {React.cloneElement(item.icon as React.ReactElement<LucideProps>, { strokeWidth: 1.5 })}
+                                </div>
+                                <h3 className={styles.category}>{item.title}</h3>
+                                <p className={styles.description} style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                                    {item.description}
+                                </p>
                             </div>
-                            <h3 className={styles.category}>{item.title}</h3>
-                            <p className={styles.description} style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
-                                {item.description}
-                            </p>
                         </div>
                     ))}
                 </div>

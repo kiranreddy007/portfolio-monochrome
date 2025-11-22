@@ -1,8 +1,18 @@
 'use client';
 
-import useScrollAnimation from '@/hooks/useScrollAnimation';
+import { useLayoutEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function AnimationProvider({ children }: { children: React.ReactNode }) {
-    useScrollAnimation();
+    useLayoutEffect(() => {
+        // Refresh ScrollTrigger on mount to ensure correct positioning
+        ScrollTrigger.refresh();
+    }, []);
+
     return <>{children}</>;
 }

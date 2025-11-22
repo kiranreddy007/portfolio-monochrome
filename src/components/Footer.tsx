@@ -1,11 +1,31 @@
+'use client';
+
+import { useRef } from 'react';
 import Link from 'next/link';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+    const containerRef = useRef<HTMLElement>(null);
+
+    useGSAP(() => {
+        gsap.from('.footer-content', {
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: 'top 90%',
+            },
+            y: 20,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out',
+        });
+    }, { scope: containerRef });
+
     return (
-        <footer className={styles.footer}>
-            <div className={`container ${styles.container}`}>
+        <footer ref={containerRef} className={styles.footer}>
+            <div className={`container ${styles.container} footer-content`}>
                 <div className={styles.column}>
                     <h3 className={styles.logo}>Kiran Ragi</h3>
                     <p className={styles.tagline}>

@@ -1,3 +1,8 @@
+'use client';
+
+import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import styles from './Experience.module.css';
 
 const experiences = [
@@ -32,15 +37,44 @@ const experiences = [
 ];
 
 export default function Experience() {
+    const containerRef = useRef<HTMLElement>(null);
+
+    useGSAP(() => {
+        gsap.from('.experience-title', {
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: 'top 80%',
+            },
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out',
+        });
+
+        const items = gsap.utils.toArray('.experience-item');
+        items.forEach((item: any) => {
+            gsap.from(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top 85%',
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out',
+            });
+        });
+    }, { scope: containerRef });
+
     return (
-        <section id="experience" className={`${styles.experience} section-dark`}>
+        <section id="experience" ref={containerRef} className={`${styles.experience} section-dark`}>
             <div className="container">
-                <h2 className={`${styles.heading} animate-on-scroll`}>
+                <h2 className={`${styles.heading} experience-title`}>
                     My Journey
                 </h2>
                 <div className={styles.timeline}>
                     {experiences.map((exp, index) => (
-                        <div key={index} className={`${styles.item} animate-on-scroll delay-${index * 100}`}>
+                        <div key={index} className={`${styles.item} experience-item`}>
                             <div className={styles.marker} />
                             <div className={styles.content}>
                                 <span className={styles.period}>{exp.period}</span>
