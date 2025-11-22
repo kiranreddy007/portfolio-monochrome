@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+
 import styles from './Skills.module.css';
 import { Code2, Cloud, Users, Zap, Layers, LucideProps } from 'lucide-react';
 

@@ -7,7 +7,7 @@ export default function Signature() {
     const pathRef = useRef<SVGPathElement>(null);
 
     useEffect(() => {
-        setIsVisible(true);
+        setTimeout(() => setIsVisible(true), 500);
     }, []);
 
     return (

@@ -11,7 +11,7 @@ export default function Hero() {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        setIsLoaded(true);
+        setTimeout(() => setIsLoaded(true), 100);
         const handleScroll = () => {
             setOffset(window.scrollY);
         };
@@ -39,7 +39,7 @@ export default function Hero() {
             <div className={`container ${styles.content}`}>
                 <div className="overflow-hidden">
                     <h1 className={`${styles.title} ${isLoaded ? 'reveal-text' : 'reveal-text-hidden'} animate-float`}>
-                        Hi, I'm Kiran.
+                        Hi, I&apos;m Kiran.
                     </h1>
                 </div>
                 <div className="overflow-hidden">
@@ -62,7 +62,7 @@ export default function Hero() {
                         See My Work
                     </Link>
                     <Link href="#contact" className="btn btn-outline">
-                        Let's Talk
+                        Let&apos;s Talk
                     </Link>
                 </div>
             </div>
