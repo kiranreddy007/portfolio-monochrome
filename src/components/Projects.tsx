@@ -2,91 +2,134 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Projects.module.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const projects = [
     {
-        title: "Cloud-Native E-Commerce Platform",
-        description: "Architected a microservices platform that handled 50k+ concurrent users during peak sales. Reduced infrastructure costs by 30% via auto-scaling optimization.",
-        tags: ["Next.js", "AWS", "Microservices", "Docker"],
-        link: "#"
+        title: "E-Commerce\nPlatform",
+        category: "System Architecture",
+        description: "Architected a microservices platform handling 50k+ concurrent users. 30% cost reduction via auto-scaling.",
+        year: "2024",
+        link: "#",
+        image: "/images/project1.jpg" // Placeholder
     },
     {
-        title: "AI Data Pipeline Dashboard",
-        description: "Built a real-time visualization tool processing 1TB+ of daily data. Empowered data scientists to identify model drift 10x faster than previous methods.",
-        tags: ["React", "Python", "WebSocket", "D3.js"],
-        link: "#"
+        title: "AI Data\nDashboard",
+        category: "Visualization",
+        description: "Real-time visualization tool processing 1TB+ daily data. Identifying model drift 10x faster.",
+        year: "2023",
+        link: "#",
+        image: "/images/project2.jpg"
     },
     {
-        title: "SaaS Project Management Tool",
-        description: "Developed a collaborative workspace used by 500+ teams. Achieved sub-100ms latency for real-time updates using optimized WebSocket connections.",
-        tags: ["TypeScript", "PostgreSQL", "GraphQL", "Redis"],
-        link: "#"
+        title: "SaaS\nWorkspace",
+        category: "Productivity",
+        description: "Collaborative workspace for 500+ teams. achieved sub-100ms latency with optimized WebSockets.",
+        year: "2023",
+        link: "#",
+        image: "/images/project3.jpg"
     },
 ];
 
 export default function Projects() {
     const containerRef = useRef<HTMLElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
+    const projectsRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        gsap.from('.project-title', {
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: 'top 80%',
-            },
-            y: 30,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out',
+        const sections = gsap.utils.toArray<HTMLElement>('.project-item');
+
+        sections.forEach((section, i) => {
+            // Parallax Image
+            const image = section.querySelector('.project-image');
+
+            gsap.fromTo(image, {
+                yPercent: -20,
+                scale: 1.1
+            }, {
+                yPercent: 20,
+                scale: 1.1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+
+            // Reveal Text
+            const text = section.querySelectorAll('.reveal-text-anim');
+            gsap.from(text, {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 70%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            // Draw line
+            const line = section.querySelector('.separator');
+            if (line) {
+                gsap.from(line, {
+                    scaleX: 0,
+                    transformOrigin: 'left',
+                    duration: 1.5,
+                    ease: 'expo.out',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 80%',
+                    }
+                });
+            }
         });
 
-        gsap.from('.project-card-wrapper', {
-            scrollTrigger: {
-                trigger: gridRef.current,
-                start: 'top 80%',
-            },
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: 'power3.out',
-        });
     }, { scope: containerRef });
 
     return (
-        <section id="projects" ref={containerRef} className={`${styles.projects} section-light`}>
+        <section id="projects" ref={containerRef} className={styles.projects}>
             <div className="container">
-                <h2 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '4rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--primary)' }} className="project-title">
-                    Featured Projects
-                </h2>
-                <div ref={gridRef} className={`${styles.grid} project-grid`}>
+                <h2 className="text-large mb-[10vh] reveal-text-anim">PROJECTS</h2>
+
+                <div ref={projectsRef} className={styles.projectList}>
                     {projects.map((project, index) => (
-                        <div key={index} className="project-card-wrapper" style={{ height: '100%' }}>
-                            <div className={`${styles.card}`}>
-                                <div className="overflow-hidden rounded-t-lg"> {/* Wrapper for zoom */}
-                                    <div className={styles.imagePlaceholder}>
-                                        Project Preview
-                                    </div>
+                        <div key={index} className={`project-item ${styles.projectItem}`}>
+                            <div className={styles.separator} />
+                            <div className={styles.projectContent}>
+                                <div className={styles.meta}>
+                                    <span className="text-body-large reveal-text-anim">{project.category}</span>
+                                    <span className="text-body-large reveal-text-anim">{project.year}</span>
                                 </div>
-                                <div className={styles.content}>
-                                    <h3 className={styles.title}>{project.title}</h3>
-                                    <p className={styles.description}>{project.description}</p>
-                                    <div className={styles.tags}>
-                                        {project.tags.map(tag => (
-                                            <span key={tag} className={styles.tag}>{tag}</span>
-                                        ))}
-                                    </div>
-                                    <div className={styles.links}>
-                                        <Link href={project.link} className={styles.link}>View Project</Link>
-                                        <Link href={project.link} className={styles.link}>GitHub</Link>
+                                <div className={styles.mainInfo}>
+                                    <h3 className={`${styles.title} text-large reveal-text-anim`}>
+                                        <Link href={project.link}>{project.title}</Link>
+                                    </h3>
+                                    <p className={`${styles.description} reveal-text-anim`}>
+                                        {project.description}
+                                    </p>
+                                    <Link href={project.link} className={`${styles.link} reveal-text-anim`}>
+                                        VIEW CASE STUDY
+                                    </Link>
+                                </div>
+                                <div className={styles.imageWrapper}>
+                                    <div className={`${styles.imageInner} project-image`}>
+                                        {/* Using a colored block as placeholder if no image, or Next.js Image */}
+                                        <div className="w-full h-full bg-[#1a1a1a]" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ))}
+                    <div className={styles.separator} />
                 </div>
             </div>
         </section>

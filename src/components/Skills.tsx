@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './Skills.module.css';
@@ -8,38 +8,37 @@ import { Code2, Cloud, Users, Zap, Layers, LucideProps } from 'lucide-react';
 
 const offerings = [
     {
-        title: "Tech-Agnostic & Fast Learner",
-        description: "TypeScript, Java, React.js, Angular, AWS, DevOps, Microservices? Sure. Need something new? Give me a day.",
-        icon: <Code2 size={24} />
+        title: "Adaptive Engineering",
+        description: "TypeScript, Java, React.js, Angular, AWS. I don't just use tools; I master them to build resilient systems.",
+        icon: <Code2 size={28} />
     },
     {
-        title: "Full-Stack & Cloud Expertise",
-        description: "Built & deployed scalable systems with modern web architectures.",
-        icon: <Cloud size={24} />
+        title: "Cloud Architecture",
+        description: "Building scalable infrastructure that handles millions of requests without breaking a sweat.",
+        icon: <Cloud size={28} />
     },
     {
-        title: "Strong Communicator",
-        description: "I speak both code and business, ensuring smooth collaboration between teams.",
-        icon: <Users size={24} />
+        title: "Human-Centric",
+        description: "Bridging the gap between complex code and user needs. I speak both tech and business.",
+        icon: <Users size={28} />
     },
     {
-        title: "Freelancing & Rapid Delivery",
-        description: "Executed high-stakes projects under tight deadlines with no room for failure.",
-        icon: <Zap size={24} />
+        title: "Rapid Execution",
+        description: "High-stakes delivery under tight deadlines. Zero compromise on quality or performance.",
+        icon: <Zap size={28} />
     },
     {
-        title: "Team Player & Leader",
-        description: "Worked with cross-functional global teams, led initiatives, and kept the momentum high.",
-        icon: <Layers size={24} />
+        title: "Technical Leadership",
+        description: "Guiding teams through the fog of development to clear, successful product launches.",
+        icon: <Layers size={28} />
     }
 ];
 
 export default function Skills() {
     const containerRef = useRef<HTMLElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
-        gsap.from('.skill-title', {
+        gsap.from('.skill-header', {
             scrollTrigger: {
                 trigger: containerRef.current,
                 start: 'top 80%',
@@ -50,36 +49,72 @@ export default function Skills() {
             ease: 'power3.out',
         });
 
-        gsap.from('.skill-card-wrapper', {
-            scrollTrigger: {
-                trigger: gridRef.current,
-                start: 'top 80%',
-            },
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'power3.out',
-        });
+        gsap.fromTo('.skill-card',
+            { y: 50, opacity: 0 },
+            {
+                scrollTrigger: {
+                    trigger: '.skill-grid',
+                    start: 'top 85%',
+                },
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power3.out',
+            }
+        );
     }, { scope: containerRef });
 
+    // Mouse Tracking for Spotlight Effect
+    useEffect(() => {
+        const cards = document.querySelectorAll<HTMLElement>(`.${styles.card}`);
+
+        const handleMouseMove = (e: MouseEvent) => {
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        };
+
+        if (containerRef.current) {
+            containerRef.current.addEventListener('mousemove', handleMouseMove);
+        }
+
+        return () => {
+            if (containerRef.current) {
+                containerRef.current.removeEventListener('mousemove', handleMouseMove);
+            }
+        };
+    }, []);
+
     return (
-        <section id="skills" ref={containerRef} className={`${styles.skills} section-light`}>
-            {/* Clean background, no patterns */}
+        <section id="skills" ref={containerRef} className={styles.skills}>
             <div className={`container ${styles.content}`}>
-                <h2 style={{ fontSize: '3rem', textAlign: 'center', marginBottom: '4rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--primary)' }} className="skill-title">
-                    What I Bring to the Table
-                </h2>
-                <div ref={gridRef} className={`${styles.grid} skill-grid`}>
+                <div className={`${styles.header} skill-header`}>
+                    <div className={styles.sectionLabel}>
+                        <div className={styles.sectionLine} />
+                        <span>02 — Expertise</span>
+                    </div>
+                    <h2 className={styles.title}>
+                        Technical <span className={styles.highlight}>Expertise</span>
+                    </h2>
+                </div>
+
+                <div className={`${styles.grid} skill-grid`}>
                     {offerings.map((item, index) => (
-                        <div key={index} className="skill-card-wrapper">
-                            <div className={`${styles.card} art-frame`}>
+                        <div key={index} className={`${styles.card} skill-card`}>
+                            <span className={styles.number}>{(index + 1).toString().padStart(2, '0')}</span>
+
+                            <div className={styles.cardContent}>
                                 <div className={styles.iconWrapper}>
-                                    {/* Thinner stroke width for classier look */}
-                                    {React.cloneElement(item.icon as React.ReactElement<LucideProps>, { strokeWidth: 1.5 })}
+                                    {React.cloneElement(item.icon as React.ReactElement<LucideProps>, { strokeWidth: 1 })}
                                 </div>
-                                <h3 className={styles.category}>{item.title}</h3>
-                                <p className={styles.description} style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                                <h3 className={styles.cardTitle}>{item.title}</h3>
+                                <p className={styles.cardDesc}>
                                     {item.description}
                                 </p>
                             </div>

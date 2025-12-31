@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import AnimationProvider from "@/components/AnimationProvider";
-import CustomCursor from "@/components/CustomCursor";
+
 
 // Premium, clean typography
 const inter = Inter({
@@ -29,10 +29,9 @@ export default function RootLayout({
         <div className="texture-overlay" />
         <Header />
         <AnimationProvider>
-          <CustomCursor />
+
           {children}
         </AnimationProvider>
-        <Footer />
       </body>
     </html>
   );
