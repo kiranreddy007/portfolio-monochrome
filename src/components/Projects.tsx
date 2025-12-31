@@ -98,7 +98,7 @@ export default function Projects() {
     return (
         <section id="projects" ref={containerRef} className={styles.projects}>
             <div className="container">
-                <h2 className="text-large mb-[10vh] reveal-text-anim">PROJECTS</h2>
+                <h2 className="text-large mb-12 reveal-text-anim">PROJECTS</h2>
 
                 <div ref={projectsRef} className={styles.projectList}>
                     {projects.map((project, index) => (

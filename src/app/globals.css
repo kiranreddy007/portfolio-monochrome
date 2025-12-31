@@ -19,8 +19,8 @@
   --spacing-sm: 1rem;
   --spacing-md: 2.5rem;
   --spacing-lg: 5rem;
-  --spacing-xl: 10rem;
-  --spacing-2xl: 15rem;
+  --spacing-xl: 8rem;
+  --spacing-2xl: 12rem;
 
   /* Border Radius */
   --radius-sm: 4px;
@@ -124,7 +124,7 @@ h6 {
 }
 
 .section {
-  padding: var(--spacing-xl) 0;
+  padding: var(--spacing-lg) 0;
   position: relative;
   min-height: 100vh;
   /* Ensure sections are tall enough to snap comfortably */
