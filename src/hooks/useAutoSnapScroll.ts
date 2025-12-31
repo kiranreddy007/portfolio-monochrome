@@ -21,133 +21,94 @@ export function useAutoSnapScroll() {
 
             // Calculate velocity (px/ms)
             if (dt > 0) {
-                velocity.current = dy / dt;
+                // Low pass filter velocity slightly to reduce noise
+                const instantVelocity = dy / dt;
+                velocity.current = 0.8 * velocity.current + 0.2 * instantVelocity;
             }
 
             lastScrollY.current = currentScrollY;
             lastTime.current = currentTime;
 
-            // If we are currently snapping, ignore scroll events to avoid fighting
+            // 1. If we are currently snapping, DO NOTHING.
+            // This prevents fighting.
             if (isSnapping.current) return;
 
-            // Clear any pending snap check from "scroll end"
-            if (snapTimeout.current) clearTimeout(snapTimeout.current);
-
-            // Fast scroll protection: if moving faster than 2.5px/ms, don't snap yet.
-            // Just wait until they slow down.
-            if (Math.abs(velocity.current) > 2.5) {
-                // Check again when they stop/slow down
-                snapTimeout.current = setTimeout(checkSnap, 100);
+            // 2. Fast scroll protection
+            // If moving faster than 2px/ms, don't initiate a snap.
+            // We want to let the user scroll freely if they are moving fast.
+            if (Math.abs(velocity.current) > 2) {
+                if (snapTimeout.current) clearTimeout(snapTimeout.current);
                 return;
             }
 
-            // Normal scroll or slow scroll: Check if we crossed the 20% threshold
-            checkThresholdSnap();
-
-            // Also set a timeout to snap when scrolling stops completely
-            snapTimeout.current = setTimeout(checkSnap, 150);
+            // 3. Debounce the threshold check slightly
+            if (snapTimeout.current) clearTimeout(snapTimeout.current);
+            snapTimeout.current = setTimeout(checkThresholdSnap, 50);
         };
 
         const checkThresholdSnap = () => {
-            const viewportHeight = window.innerHeight;
-
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-
-                // Logic for "Next Section" (Scrolling Down)
-                // If section top is within the bottom 20% area of screen? 
-                // No, user said: "when ever atleast 20% of the screen is filled with the next section"
-                // This means the section top is at 80% viewport height or higher (smaller y value).
-                // rect.top <= viewportHeight * 0.8
-
-                // We also need to ensure we haven't already scrolled PAST it meaningfully.
-                // i.e., it's not the "current" section that we are leaving. 
-                // It works best if we check if top crossed the 80% line recently.
-
-                // Simple state check: 
-                // Is this section entering from bottom? (rect.top > 0)
-                // Is it covering > 20% of screen? (rect.top <= viewportHeight * 0.8)
-                // Is it NOT already fully visible? (rect.top > 0)
-
-                const isEnteringFromBottom = rect.top > 0 && rect.top <= viewportHeight * 0.8;
-
-                // Logic for "Previous Section" (Scrolling Up)
-                // Section enters from top. bottom is > viewportHeight * 0.2
-                const isEnteringFromTop = rect.bottom < viewportHeight && rect.bottom >= viewportHeight * 0.2;
-
-                if (velocity.current > 0 && isEnteringFromBottom) {
-                    // Scrolling Down + Threshold Met
-                    triggerSnap(section);
-                } else if (velocity.current < 0 && isEnteringFromTop) {
-                    // Scrolling Up + Threshold Met
-                    triggerSnap(section);
-                }
-            });
-        };
-
-        const checkSnap = () => {
-            // Find the section that takes up the most screen space and snap to it
-            // This handles the "stopped scrolling" case
             if (isSnapping.current) return;
 
-            let bestSection: HTMLElement | null = null;
-            let maxOverlap = 0;
             const viewportHeight = window.innerHeight;
 
             sections.forEach(section => {
                 const rect = section.getBoundingClientRect();
-                const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
 
-                if (visibleHeight > maxOverlap) {
-                    maxOverlap = visibleHeight;
-                    bestSection = section;
+                // --- SNAP LOGIC ---
+                // We only care about crossing the threshold.
+
+                // Scrolling DOWN: 
+                // Target is the section below us. 
+                // Trigger: Its TOP edge is within the viewport, high enough to cover 20%.
+                // Condition: rect.top <= viewportHeight * 0.8
+                // AND it shouldn't be "above" the viewport (rect.top > 0)
+                const isNextSection = rect.top > 10 && rect.top <= viewportHeight * 0.8;
+
+                // Scrolling UP:
+                // Target is the section above us.
+                // Trigger: Its BOTTOM edge is visible and covers > 20% from top.
+                // Condition: rect.bottom >= viewportHeight * 0.2
+                // AND it shouldn't be "below" the viewport completely
+                const isPrevSection = rect.bottom < viewportHeight - 10 && rect.bottom >= viewportHeight * 0.2;
+
+                if (velocity.current > 0.1 && isNextSection) {
+                    // Moving Down -> Snap to this next section
+                    triggerSnap(section);
+                } else if (velocity.current < -0.1 && isPrevSection) {
+                    // Moving Up -> Snap to this previous section
+                    triggerSnap(section);
                 }
             });
-
-            if (bestSection && maxOverlap > viewportHeight * 0.2) {
-                triggerSnap(bestSection);
-            }
         };
 
         const triggerSnap = (target: HTMLElement) => {
             if (isSnapping.current) return;
 
-            // Detect if we are already close enough (e.g. within 10px) to avoid jitter
-            const rect = target.getBoundingClientRect();
-            if (Math.abs(rect.top) < 10) return;
+            // Allow Lenis to handle the scroll
+            if (window.lenis) {
+                isSnapping.current = true;
 
-            isSnapping.current = true;
+                window.lenis.scrollTo(target, {
+                    offset: 0,
+                    duration: 1.2, // 1.2s duration (slower/smoother)
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Same easing
+                    lock: true, // Optional: lock scroll while snapping to prevent fighting? 
+                    // Better not to lock hard, but 'immediate' usually overrides.
+                    // Lenis 'lock' might prevent user interruption which can be bad.
+                    // Let's keep it unlocked but set flag.
+                    onComplete: () => {
+                        isSnapping.current = false;
+                    }
+                });
 
-            // Custom smooth scroll for slower/controlled animation
-            const targetY = window.scrollY + rect.top;
-            smoothScrollTo(targetY, 1000); // 1000ms duration (slower)
-        };
-
-        const smoothScrollTo = (targetY: number, duration: number) => {
-            const startY = window.scrollY;
-            const distance = targetY - startY;
-            let startTime: number | null = null;
-
-            const animation = (currentTime: number) => {
-                if (startTime === null) startTime = currentTime;
-                const timeElapsed = currentTime - startTime;
-                const progress = Math.min(timeElapsed / duration, 1);
-
-                // Easing: easeInOutQuad
-                const ease = progress < 0.5
-                    ? 2 * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-                window.scrollTo(0, startY + distance * ease);
-
-                if (timeElapsed < duration) {
-                    requestAnimationFrame(animation);
-                } else {
+                // Fail-safe unlock
+                setTimeout(() => {
                     isSnapping.current = false;
-                }
-            };
-
-            requestAnimationFrame(animation);
+                }, 1300);
+            } else {
+                // Fallback if Lenis isn't ready
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });

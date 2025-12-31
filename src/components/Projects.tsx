@@ -17,7 +17,7 @@ const projects = [
         description: "Architected a microservices platform handling 50k+ concurrent users. 30% cost reduction via auto-scaling.",
         year: "2024",
         link: "#",
-        image: "/images/project1.jpg" // Placeholder
+        image: "/images/ecommerce_bw.png"
     },
     {
         title: "AI Data\nDashboard",
@@ -25,7 +25,7 @@ const projects = [
         description: "Real-time visualization tool processing 1TB+ daily data. Identifying model drift 10x faster.",
         year: "2023",
         link: "#",
-        image: "/images/project2.jpg"
+        image: "/images/ai_dashboard_bw.png"
     },
     {
         title: "SaaS\nWorkspace",
@@ -33,7 +33,7 @@ const projects = [
         description: "Collaborative workspace for 500+ teams. achieved sub-100ms latency with optimized WebSockets.",
         year: "2023",
         link: "#",
-        image: "/images/project3.jpg"
+        image: "/images/saas_workspace_bw.png"
     },
 ];
 
@@ -122,8 +122,13 @@ export default function Projects() {
                                 </div>
                                 <div className={styles.imageWrapper}>
                                     <div className={`${styles.imageInner} project-image`}>
-                                        {/* Using a colored block as placeholder if no image, or Next.js Image */}
-                                        <div className="w-full h-full bg-[#1a1a1a]" />
+                                        <Image
+                                            src={project.image}
+                                            alt={project.title}
+                                            fill
+                                            className="object-cover opacity-80"
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                        />
                                     </div>
                                 </div>
                             </div>
