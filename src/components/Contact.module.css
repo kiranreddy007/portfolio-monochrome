@@ -146,22 +146,27 @@
 
 .socials {
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
 }
 
 .socialLink {
-    font-size: 1rem;
-    color: var(--foreground);
-    text-decoration: none;
-    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 5px;
-    transition: color 0.3s ease;
+    color: var(--secondary);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background: transparent;
 }
 
 .socialLink:hover {
-    color: #888;
+    background: var(--primary);
+    color: var(--background);
+    border-color: var(--primary);
+    transform: scale(1.1);
 }
 
 .copyright {

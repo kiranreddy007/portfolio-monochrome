@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './Contact.module.css';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Linkedin, Github, Twitter, Instagram } from 'lucide-react';
 
 export default function Contact() {
     const containerRef = useRef<HTMLElement>(null);
@@ -82,10 +82,18 @@ export default function Contact() {
                         <div className={styles.footerCol}>
                             <span className={styles.label}>Socials</span>
                             <div className={styles.socials}>
-                                <Link href="#" className={styles.socialLink}>LinkedIn <ArrowUpRight size={14} /></Link>
-                                <Link href="#" className={styles.socialLink}>GitHub <ArrowUpRight size={14} /></Link>
-                                <Link href="#" className={styles.socialLink}>Twitter <ArrowUpRight size={14} /></Link>
-                                <Link href="#" className={styles.socialLink}>Instagram <ArrowUpRight size={14} /></Link>
+                                <Link href="#" className={styles.socialLink} aria-label="LinkedIn">
+                                    <Linkedin size={20} strokeWidth={1.5} />
+                                </Link>
+                                <Link href="#" className={styles.socialLink} aria-label="GitHub">
+                                    <Github size={20} strokeWidth={1.5} />
+                                </Link>
+                                <Link href="#" className={styles.socialLink} aria-label="Twitter">
+                                    <Twitter size={20} strokeWidth={1.5} />
+                                </Link>
+                                <Link href="#" className={styles.socialLink} aria-label="Instagram">
+                                    <Instagram size={20} strokeWidth={1.5} />
+                                </Link>
                             </div>
                         </div>
 

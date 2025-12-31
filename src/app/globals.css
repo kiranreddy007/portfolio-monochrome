@@ -186,12 +186,15 @@ h6 {
   left: 0;
   width: var(--cursor-size);
   height: var(--cursor-size);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
+  /* Dimmed slightly */
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  /* Contrast for light bg */
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
   transform: translate(-50%, -50%);
+  /* Removed mix-blend-mode: difference to prevent disappearing on grey */
 }
 
 .custom-cursor-follower {
@@ -200,12 +203,15 @@ h6 {
   left: 0;
   width: 50px;
   height: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* Much dimmer follower */
+  background: rgba(255, 255, 255, 0.02);
+  /* Very subtle fill */
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, background 0.3s;
+  transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
 }
 
 /* Texture Overlay */

@@ -12,8 +12,10 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Hero() {
     const containerRef = useRef<HTMLElement>(null);
     const [time, setTime] = useState("");
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const updateTime = () => {
             const now = new Date();
             setTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }));
@@ -66,7 +68,7 @@ export default function Hero() {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className={styles.hero}>
+        <section id="hero" ref={containerRef} className={styles.hero}>
             {/* Layer 1: Visible Background Image (Behind Text) */}
             <div className={`${styles.landscapeVisual} hero-landscape`} />
 
@@ -89,7 +91,7 @@ export default function Hero() {
                     </div>
 
                     <div className={styles.scrollHint}>
-                        <span>Local Time / {time}</span>
+                        <span>Local Time / {mounted ? time : '--:--'}</span>
                         <span>Scroll to Explore</span>
                     </div>
                 </div>
